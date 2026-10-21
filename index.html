@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Website portofolio Raihan, mahasiswa Sistem Informasi dan peminat Digital Entrepreneurship.">
+    <title>Raihan | Personal Portfolio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <a href="#home" class="logo">Raihan<span>.</span></a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Buka menu">☰</button>
+
+    <nav class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#education">Education</a>
+        <a href="#projects">Projects</a>
+        <a href="#cyberpreneurship">Cyberpreneurship</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <button id="themeToggle" class="theme-toggle" aria-label="Ganti tema">☼</button>
+</header>
+
+<main>
+    <section class="hero section" id="home">
+        <div class="hero-text reveal">
+            <span class="eyebrow"><span class="status-dot"></span> Personal Portfolio</span>
+            <h1>Halo, saya <span>Raihan.</span></h1>
+            <h2>Information Systems Graduate</h2>
+            <p>
+                Saya tertarik pada teknologi informasi, pengembangan website,
+                dan digital entrepreneurship. Saya senang mempelajari ide baru
+                dan mengubahnya menjadi solusi digital yang bermanfaat.
+            </p>
+
+            <div class="hero-actions">
+                <a href="#projects" class="btn btn-primary">Lihat Proyek ↗</a>
+                <a href="#contact" class="btn btn-secondary">Hubungi Saya</a>
+            </div>
+
+            <div class="hero-social">
+                <span>Berkenalan lebih lanjut</span>
+                <a href="#about">Tentang Saya ↓</a>
+            </div>
+        </div>
+
+        <div class="hero-visual reveal">
+            <div class="photo-decoration"></div>
+            <div class="photo-frame">
+                <img src="./assets/profile.jpeg" alt="Foto profil Raihan" class="profile-img">
+            </div>
+            <div class="floating-card">
+                <span class="floating-icon">✦</span>
+                <div>
+                    <strong>Terus Berkembang</strong>
+                    <small>Belajar dan berkarya</small>
+                </div>
+            </div>
+            <div class="hero-orb orb-one"></div>
+            <div class="hero-orb orb-two"></div>
+        </div>
+    </section>
+
+    
+<section class="section about-section" id="about">
+    <div class="section-heading reveal">
+        <span class="eyebrow">TENTANG SAYA</span>
+        <h2>Mengenal saya lebih dekat.</h2>
+        <p>
+            Perjalanan saya dalam bidang teknologi, organisasi,
+            musik, dan pengalaman menjalankan sebuah acara.
+        </p>
+    </div>
+
+    <!-- Profil singkat -->
+    <div class="about-intro reveal">
+        <div class="about-intro-icon">👋</div>
+        <div>
+            <h3>Halo, saya Raihan!</h3>
+            <p>
+                Saya merupakan mahasiswa Sistem Informasi dari Universitas
+                Budi Luhur. Saya memiliki ketertarikan pada teknologi informasi dan
+                digital entrepreneurship. saya tertarik mempelajari serta mengembangkan
+                sistem informasi,UI/UX dan website. Selain belajar
+                di bidang akademik, saya juga aktif mengikuti kegiatan organisasi
+                untuk menambah pengalaman, memperluas relasi, dan mengembangkan
+                kemampuan bekerja sama dalam tim.
+            </p>
+        </div>
+    </div>
+
+    <!-- Pengalaman organisasi -->
+    <div class="organization-card reveal">
+        <div class="organization-info">
+            <span class="eyebrow">PENGALAMAN ORGANISASI</span>
+            <h3>UKM Musik KMM Budi Luhur</h3>
+            <p>
+                Saya merupakan bagian dari UKM Musik KMM Budi Luhur,
+                sebuah unit kegiatan mahasiswa yang berfokus pada kegiatan
+                musik. Melalui organisasi ini, saya mendapatkan pengalaman
+                dalam kegiatan bermusik, bekerja sama dengan anggota lain,
+                serta terlibat dalam pelaksanaan acara konser.
+            </p>
+
+            <div class="experience-tags">
+                <span>Organisasi</span>
+                <span>Musik</span>
+                <span>Kerja Sama Tim</span>
+                <span>Pelaksanaan Konser</span>
+            </div>
+        </div>
+
+        <div class="organization-icon">♫</div>
+    </div>
+
+    <!-- Bukti foto kegiatan -->
+    <div class="experience-heading reveal">
+        <span class="eyebrow">DOKUMENTASI</span>
+        <h3>Pengalaman dan kegiatan saya.</h3>
+        <p>
+            Beberapa dokumentasi sebagai bagian dari UKM Musik KMM Budi Luhur
+            dan pengalaman dalam menjalankan konser.
+        </p>
+    </div>
+
+    <div class="experience-gallery">
+
+        <!-- Foto keanggotaan UKM -->
+        <article class="experience-photo-card reveal">
+            <div class="experience-photo">
+                <img
+    src="./assets/ukm-musik.jpeg"
+    alt="Dokumentasi Raihan sebagai anggota UKM Musik KMM Budi Luhur"
+    loading="lazy">
+                >
+            </div>
+            <div class="experience-caption">
+                <span class="photo-label">ORGANISASI</span>
+                <h4>UKM Musik KMM Budi Luhur</h4>
+                <p>
+                    Dokumentasi keikutsertaan saya dalam kegiatan UKM Musik.
+                </p>
+            </div>
+        </article>
+
+        <!-- Foto pelaksanaan konser -->
+        <article class="experience-photo-card reveal">
+            <div class="experience-photo">
+                <img
+                    src="assets/konser-kmm.jpeg"
+                    alt="Dokumentasi pengalaman Raihan dalam pelaksanaan konser UKM Musik"
+                    loading="lazy"
+                >
+            </div>
+            <div class="experience-caption">
+                <span class="photo-label">PENGALAMAN ACARA</span>
+                <h4>Pelaksanaan Konser</h4>
+                <p>
+                    Dokumentasi pengalaman saya saat terlibat dalam pelaksanaan
+                    konser bersama UKM Musik KMM Budi Luhur.
+                </p>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+
+    
+<section class="section" id="education">
+    <div class="section-heading reveal">
+        <span class="eyebrow">PENDIDIKAN</span>
+        <h2>Perjalanan pendidikan saya.</h2>
+        <p>Setiap tahap pendidikan menjadi bagian dari proses belajar dan perkembangan saya.</p>
+    </div>
+
+    <div class="timeline reveal">
+
+        <!-- Sekolah Dasar -->
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <span class="timeline-label">2012 – 2018</span>
+                <h3>SD Sumbangsih Grogol</h3>
+                <p>Sekolah Dasar</p>
+                <small>
+                    Membangun dasar pengetahuan, belajar bersosialisasi,
+                    dan mengembangkan kemampuan dasar sebagai bekal pendidikan selanjutnya.
+                </small>
+            </div>
+        </div>
+
+        <!-- Sekolah Menengah Pertama -->
+        <div class="timeline-item" style="margin-top: 28px;">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <span class="timeline-label">2018 – 2021</span>
+                <h3>SMP Islam Darul Hasan</h3>
+                <p>Sekolah Menengah Pertama</p>
+                <small>
+                    Mengembangkan pengetahuan akademik, kedisiplinan,
+                    tanggung jawab, dan kemampuan bekerja sama.
+                </small>
+            </div>
+        </div>
+
+        <!-- Sekolah Menengah Atas -->
+        <div class="timeline-item" style="margin-top: 28px;">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <span class="timeline-label">2021 – 2024</span>
+                <h3>SMA Cahaya Fadilah</h3>
+                <p>Sekolah Menengah Atas</p>
+                <small>
+                    Memperluas wawasan dan mempersiapkan diri untuk melanjutkan
+                    pendidikan ke jenjang perguruan tinggi.
+                </small>
+            </div>
+        </div>
+
+        <!-- Perguruan Tinggi -->
+        <div class="timeline-item" style="margin-top: 28px;">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <span class="timeline-label">2024 Perguruan Tinggi</span>
+                <h3>Universitas Budi Luhur</h3>
+                <p>Sarjana Komputer (S.Kom.) — Sistem Informasi</p>
+                <small>
+                    Mempelajari sistem informasi, proses bisnis,
+                    teknologi informasi, dan pengembangan solusi digital.
+                </small>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+    <section class="section projects-section" id="projects">
+        <div class="section-heading reveal">
+            <span class="eyebrow">PORTOFOLIO</span>
+            <h2>Proyek yang pernah saya kerjakan.</h2>
+            <p>Contoh proyek pembelajaran dan pengembangan sistem.</p>
+        </div>
+
+        <div class="project-grid">
+            <article class="project-card reveal">
+                <div class="project-art art-purple">
+                    <span>01</span>
+                    <div class="art-symbol">⌘</div>
+                    <small>WEB DEVELOPMENT</small>
+                </div>
+                <div class="project-info">
+                    <span class="project-tag">Website</span>
+                    <h3>Personal Portfolio</h3>
+                    <p>Website untuk memperkenalkan profil, proyek, dan materi pembelajaran.</p>
+                </div>
+            </article>
+
+            <article class="project-card reveal">
+                <div class="project-art art-blue">
+                    <span>02</span>
+                    <div class="art-symbol">▦</div>
+                    <small>INFORMATION SYSTEM</small>
+                </div>
+                <div class="project-info">
+                    <span class="project-tag">Sistem Informasi</span>
+                    <h3>Aplikasi Daftar Buku</h3>
+                    <p>Proyek pembelajaran aplikasi Android untuk mengelola data buku.</p>
+                </div>
+            </article>
+
+            <article class="project-card reveal">
+                <div class="project-art art-pink">
+                    <span>03</span>
+                    <div class="art-symbol">↗</div>
+                    <small>DIGITAL BUSINESS</small>
+                </div>
+                <div class="project-info">
+                    <span class="project-tag">Digital Business</span>
+                    <h3>Website Pemesanan QR</h3>
+                    <p>Konsep website pemesanan menu melalui QR untuk membantu proses pemesanan.</p>
+                </div>
+            </article>
+        </div>
+        <p class="section-note">Silakan sesuaikan contoh proyek di atas dengan proyek yang benar-benar pernah kamu kerjakan.</p>
+    </section>
+
+    <section class="section materials-section" id="cyberpreneurship">
+        <div class="section-heading reveal">
+            <span class="eyebrow">CYBERPRENEURSHIP</span>
+            <h2>Materi Pembelajaran Saya</h2>
+            <p>Kumpulan materi dan pembelajaran mengenai dunia digital entrepreneurship.</p>
+        </div>
+
+        <div class="materials-toolbar reveal">
+            <div class="material-total">
+                <strong id="materialCount">0 Materi</strong>
+                <span>tersedia</span>
+            </div>
+            <button class="btn btn-primary" id="addMaterialBtn">＋ Tambah Materi</button>
+        </div>
+
+        <div class="material-grid" id="materialGrid"></div>
+        <p class="empty-state hidden" id="emptyState">Belum ada materi. Klik "Tambah Materi" untuk mulai mengisi.</p>
+    </section>
+
+    <section class="section contact-section" id="contact">
+        <div class="contact-box reveal">
+            <span class="eyebrow">KONTAK</span>
+            <h2>Mari terhubung.</h2>
+            <p>
+                Punya ide, pertanyaan, atau ingin berdiskusi mengenai teknologi
+                dan bisnis digital? Silakan hubungi saya.
+            </p>
+            <a class="btn btn-primary" href="mailto:emailkamu@example.com">Kirim Email ↗</a>
+            <small class="contact-note">Ganti emailkamu@example.com dengan alamat email kamu.</small>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <a href="#home" class="logo">Raihan<span>.</span></a>
+    <p>© <span id="currentYear"></span> Raihan. Dibuat dengan semangat untuk terus berkembang.</p>
+    <a href="#home" class="back-to-top" aria-label="Kembali ke atas">↑</a>
+</footer>
+
+<!-- Modal Tambah dan Edit Materi -->
+<div class="modal hidden" id="materialFormModal">
+    <div class="modal-backdrop" data-close-form></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
+        <div class="modal-header">
+            <div>
+                <span class="eyebrow">KELOLA MATERI</span>
+                <h2 id="formModalTitle">Tambah Materi</h2>
+            </div>
+            <button class="modal-close" data-close-form aria-label="Tutup">×</button>
+        </div>
+
+        <form id="materialForm">
+            <label for="materialTitle">Judul Materi</label>
+            <input type="text" id="materialTitle" maxlength="100" placeholder="Contoh: Digital Marketing" required>
+
+            <label for="materialCategory">Kategori</label>
+            <select id="materialCategory" required>
+                <option value="Entrepreneurship">Entrepreneurship</option>
+                <option value="E-Commerce">E-Commerce</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Search Engine">Search Engine</option>
+                <option value="Marketplace">Marketplace</option>
+                <option value="Lainnya">Lainnya</option>
+            </select>
+
+            <label for="materialDescription">Deskripsi Singkat</label>
+            <textarea id="materialDescription" rows="2" maxlength="220" placeholder="Ringkasan singkat materi..." required></textarea>
+
+            <label for="materialContent">Isi Materi</label>
+            <textarea id="materialContent" rows="6" placeholder="Tuliskan isi materi di sini..." required></textarea>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" data-close-form>Batal</button>
+                <button type="submit" class="btn btn-primary" id="saveMaterialBtn">Simpan Materi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Baca Materi -->
+<div class="modal hidden" id="readMaterialModal">
+    <div class="modal-backdrop" data-close-read></div>
+    <div class="modal-panel read-panel" role="dialog" aria-modal="true" aria-labelledby="readTitle">
+        <div class="modal-header">
+            <span class="material-category" id="readCategory"></span>
+            <button class="modal-close" data-close-read aria-label="Tutup">×</button>
+        </div>
+        <h2 id="readTitle"></h2>
+        <div class="read-content" id="readContent"></div>
+        <div class="form-actions">
+            <button class="btn btn-secondary" data-close-read>Tutup</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
