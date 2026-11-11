@@ -1,41 +1,52 @@
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     // ==========================================
-    // 1. PENGATURAN DASAR
+    // 1. KONFIGURASI SUPABASE
     // ==========================================
+    const SUPABASE_URL = "https://yzahgejlidacilvubuze.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_41qJQKakvSQMwTjzecoMWA_BtdtbdoW";
+
+    if (!window.supabase) {
+        alert("Supabase belum berhasil dimuat. Periksa script Supabase di index.html.");
+        return;
+    }
+
+    const db = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
     const STORAGE_KEY = "raihanCyberMaterials";
 
+    // ==========================================
+    // 2. MATERI DEFAULT
+    // ==========================================
     const defaultMaterials = [
         {
-            id: "material-1",
             title: "Digital Entrepreneurship",
             category: "Entrepreneurship",
             description: "Pengertian dan konsep dasar kewirausahaan di era digital.",
             content: "Digital Entrepreneurship adalah kegiatan membangun dan menjalankan bisnis dengan memanfaatkan teknologi digital.\n\nTeknologi digital dapat digunakan untuk memasarkan produk, melayani pelanggan, melakukan transaksi, serta mengembangkan model bisnis baru.\n\nContoh: bisnis berbasis website, toko online, dan layanan digital."
         },
         {
-            id: "material-2",
             title: "E-Commerce",
             category: "E-Commerce",
             description: "Konsep perdagangan digital dan bagaimana transaksi dilakukan secara online.",
             content: "E-Commerce atau perdagangan elektronik adalah aktivitas jual beli barang dan jasa melalui media elektronik, terutama internet.\n\nProsesnya dapat mencakup pemilihan produk, pemesanan, pembayaran, pengiriman, dan layanan pelanggan.\n\nContoh: toko online dan marketplace."
         },
         {
-            id: "material-3",
             title: "Digital Marketing",
             category: "Marketing",
             description: "Strategi pemasaran menggunakan media dan teknologi digital.",
             content: "Digital Marketing adalah kegiatan mempromosikan produk atau layanan melalui media digital.\n\nContoh strategi digital marketing adalah pemasaran melalui media sosial, email marketing, iklan digital, dan optimasi mesin pencari.\n\nTujuannya adalah menjangkau audiens yang sesuai dan membantu mencapai target bisnis."
         },
         {
-            id: "material-4",
             title: "Content Marketing",
             category: "Marketing",
             description: "Strategi membuat konten untuk menarik dan membangun hubungan dengan audiens.",
             content: "Content Marketing merupakan strategi pemasaran melalui pembuatan dan distribusi konten yang relevan serta bermanfaat bagi audiens.\n\nBentuk konten dapat berupa artikel, video, infografis, dan unggahan media sosial.\n\nKonten yang baik dapat meningkatkan kepercayaan audiens dan membantu memperkenalkan produk."
         },
         {
-            id: "material-5",
             title: "Search Engine",
             category: "Search Engine",
             description: "Mengenal mesin pencari dan perannya dalam menemukan informasi di internet.",
@@ -43,55 +54,247 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     ];
 
-    let materials = loadMaterials();
+    let materials = [...defaultMaterials];
     let editingId = null;
+    let currentSession = null;
+    let loginInProgress = false;
 
-    function loadMaterials() {
-        try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-
-            if (saved === null) {
-                localStorage.setItem(
-                    STORAGE_KEY,
-                    JSON.stringify(defaultMaterials)
-                );
-                return [...defaultMaterials];
+    // ==========================================
+    // 3. LOGIN ADMIN SUPABASE
+    // ==========================================
+    function loginAdmin() {
+        return new Promise(resolve => {
+            if (loginInProgress) {
+                resolve(false);
+                return;
             }
 
-            const parsed = JSON.parse(saved);
-            return Array.isArray(parsed) ? parsed : [...defaultMaterials];
-        } catch (error) {
-            console.error("Gagal membaca materi:", error);
-            return [...defaultMaterials];
-        }
+            loginInProgress = true;
+
+            const overlay = document.createElement("div");
+            overlay.style.cssText = `
+                position:fixed; inset:0; z-index:99999;
+                background:rgba(0,0,0,.7);
+                display:flex; align-items:center;
+                justify-content:center; padding:20px;
+            `;
+
+            overlay.innerHTML = `
+                <form id="adminLoginForm" style="
+                    background:white; color:#222;
+                    width:100%; max-width:380px;
+                    padding:28px; border-radius:16px;
+                    box-sizing:border-box;
+                ">
+                    <h2 style="margin:0 0 8px;">Login Admin</h2>
+                    <p style="font-size:14px;color:#666;margin-bottom:20px;">
+                        Masuk untuk mengelola materi Cyberpreneurship.
+                    </p>
+
+                    <label style="display:block;margin-bottom:6px;">
+                        Email Admin
+                    </label>
+                    <input id="adminEmail" type="email" required
+                        autocomplete="username"
+                        style="width:100%;padding:12px;margin-bottom:15px;
+                        box-sizing:border-box;border:1px solid #ccc;
+                        border-radius:8px;">
+
+                    <label style="display:block;margin-bottom:6px;">
+                        Password
+                    </label>
+                    <input id="adminPassword" type="password" required
+                        autocomplete="current-password"
+                        style="width:100%;padding:12px;margin-bottom:12px;
+                        box-sizing:border-box;border:1px solid #ccc;
+                        border-radius:8px;">
+
+                    <p id="loginError" style="
+                        color:#d33;font-size:13px;min-height:18px;
+                    "></p>
+
+                    <div style="display:flex;gap:10px;">
+                        <button type="button" id="cancelLogin"
+                            style="flex:1;padding:11px;border:1px solid #ccc;
+                            border-radius:8px;background:white;cursor:pointer;">
+                            Batal
+                        </button>
+                        <button type="submit" id="submitLogin"
+                            style="flex:1;padding:11px;border:0;
+                            border-radius:8px;background:#7546c8;
+                            color:white;cursor:pointer;">
+                            Masuk
+                        </button>
+                    </div>
+                </form>
+            `;
+
+            document.body.appendChild(overlay);
+
+            const form = overlay.querySelector("#adminLoginForm");
+            const emailInput = overlay.querySelector("#adminEmail");
+            const passwordInput = overlay.querySelector("#adminPassword");
+            const errorText = overlay.querySelector("#loginError");
+            const submitButton = overlay.querySelector("#submitLogin");
+
+            function finish(result) {
+                overlay.remove();
+                loginInProgress = false;
+                resolve(result);
+            }
+
+            overlay.querySelector("#cancelLogin").addEventListener(
+                "click", () => finish(false)
+            );
+
+            form.addEventListener("submit", async event => {
+                event.preventDefault();
+
+                submitButton.disabled = true;
+                submitButton.textContent = "Memproses...";
+                errorText.textContent = "";
+
+                const { data, error } = await db.auth.signInWithPassword({
+                    email: emailInput.value.trim(),
+                    password: passwordInput.value
+                });
+
+                if (error) {
+                    errorText.textContent =
+                        "Login gagal. Periksa email dan password.";
+                    submitButton.disabled = false;
+                    submitButton.textContent = "Masuk";
+                    passwordInput.value = "";
+                    return;
+                }
+
+                currentSession = data.session;
+                finish(true);
+            });
+
+            emailInput.focus();
+        });
     }
 
-    function saveMaterials() {
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(materials));
-            return true;
-        } catch (error) {
-            alert("Materi gagal disimpan. Periksa ruang penyimpanan browser.");
-            console.error("Gagal menyimpan materi:", error);
+    async function requireAdmin() {
+        const { data } = await db.auth.getSession();
+        currentSession = data.session;
+
+        if (!currentSession) {
+            const success = await loginAdmin();
+            if (!success) return false;
+        }
+
+        await seedMaterialsIfEmpty();
+        await loadMaterialsFromDatabase();
+
+        return true;
+    }
+
+    db.auth.onAuthStateChange((_event, session) => {
+        currentSession = session;
+    });
+
+    // ==========================================
+    // 4. MEMINDAHKAN MATERI LAMA KE SUPABASE
+    // ==========================================
+    async function seedMaterialsIfEmpty() {
+        const { data, error } = await db
+            .from("materials")
+            .select("id")
+            .limit(1);
+
+        if (error) {
+            console.error("Gagal memeriksa database:", error);
+            alert("Tidak dapat mengakses database. Periksa pengaturan Supabase.");
             return false;
         }
+
+        if (data && data.length > 0) {
+            return true;
+        }
+
+        let initialMaterials = [...defaultMaterials];
+
+        // Mengambil materi lama dari localStorage jika tersedia.
+        try {
+            const oldData = localStorage.getItem(STORAGE_KEY);
+
+            if (oldData) {
+                const parsed = JSON.parse(oldData);
+
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    initialMaterials = parsed;
+                }
+            }
+        } catch (error) {
+            console.warn("Materi lama tidak dapat dibaca:", error);
+        }
+
+        const cleanMaterials = initialMaterials.map(item => ({
+            title: item.title,
+            category: item.category || "Lainnya",
+            description: item.description || "",
+            content: item.content || ""
+        }));
+
+        const { error: insertError } = await db
+            .from("materials")
+            .insert(cleanMaterials);
+
+        if (insertError) {
+            console.error("Gagal memindahkan materi:", insertError);
+            alert("Materi awal gagal dimasukkan ke Supabase.");
+            return false;
+        }
+
+        return true;
     }
 
     // ==========================================
-    // 2. FOTO PROFIL
+    // 5. MEMBACA MATERI DARI DATABASE
+    // ==========================================
+    async function loadMaterialsFromDatabase() {
+        const { data, error } = await db
+            .from("materials")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            console.error("Gagal mengambil materi:", error);
+            alert("Materi gagal dimuat dari database.");
+            return false;
+        }
+
+        if (data && data.length > 0) {
+            materials = data.map(item => ({
+                id: String(item.id),
+                title: item.title,
+                category: item.category,
+                description: item.description,
+                content: item.content
+            }));
+        } else {
+            materials = [];
+        }
+
+        renderMaterials();
+        return true;
+    }
+
+    // ==========================================
+    // 6. FOTO PROFIL
     // ==========================================
     const profileImage = document.querySelector(".profile-img");
 
     if (profileImage) {
         profileImage.addEventListener("error", () => {
-            console.error(
-                "Foto tidak ditemukan. Pastikan file ada di assets/profile.jpeg"
-            );
+            console.error("Pastikan foto ada di assets/profile.jpeg");
         });
     }
 
     // ==========================================
-    // 3. MENU NAVIGASI MOBILE
+    // 7. MENU NAVIGASI MOBILE
     // ==========================================
     const menuToggle = document.getElementById("menuToggle");
     const navLinks = document.getElementById("navLinks");
@@ -99,9 +302,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (menuToggle && navLinks) {
         menuToggle.addEventListener("click", () => {
             navLinks.classList.toggle("open");
-            menuToggle.textContent = navLinks.classList.contains("open")
-                ? "×"
-                : "☰";
+            menuToggle.textContent =
+                navLinks.classList.contains("open") ? "×" : "☰";
         });
 
         navLinks.querySelectorAll("a").forEach(link => {
@@ -113,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 4. MODE TERANG DAN GELAP
+    // 8. MODE TERANG DAN GELAP
     // ==========================================
     const themeToggle = document.getElementById("themeToggle");
 
@@ -161,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 5. TAHUN FOOTER
+    // 9. TAHUN FOOTER
     // ==========================================
     const currentYear = document.getElementById("currentYear");
 
@@ -170,7 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 6. ANIMASI SAAT SCROLL
+    // 10. ANIMASI SAAT SCROLL
     // ==========================================
     const revealElements = document.querySelectorAll(".reveal");
 
@@ -190,7 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 7. PENANDA MENU AKTIF
+    // 11. PENANDA MENU AKTIF
     // ==========================================
     const sections = document.querySelectorAll("main section[id]");
     const navItems = document.querySelectorAll(".nav-links a");
@@ -213,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 8. ELEMEN MATERI
+    // 12. ELEMEN MATERI
     // ==========================================
     const materialGrid = document.getElementById("materialGrid");
     const materialCount = document.getElementById("materialCount");
@@ -246,7 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // ==========================================
-    // 9. MENAMPILKAN KARTU MATERI
+    // 13. MENAMPILKAN KARTU MATERI
     // ==========================================
     function renderMaterials() {
         materialGrid.replaceChildren();
@@ -284,13 +486,29 @@ document.addEventListener("DOMContentLoaded", () => {
             const editButton = createActionButton(
                 "✎ Edit",
                 "action-btn action-edit",
-                () => openEditModal(material.id)
+                async () => {
+                    if (!await requireAdmin()) return;
+
+                    const latest = materials.find(
+                        item => item.title === material.title
+                    );
+
+                    if (latest) openEditModal(latest.id);
+                }
             );
 
             const deleteButton = createActionButton(
                 "✕ Hapus",
                 "action-btn action-delete",
-                () => deleteMaterial(material.id)
+                async () => {
+                    if (!await requireAdmin()) return;
+
+                    const latest = materials.find(
+                        item => item.title === material.title
+                    );
+
+                    if (latest) await deleteMaterial(latest.id);
+                }
             );
 
             actions.append(readButton, editButton, deleteButton);
@@ -309,9 +527,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 10. TAMBAH MATERI
+    // 14. TAMBAH MATERI
     // ==========================================
-    addMaterialBtn.addEventListener("click", () => {
+    addMaterialBtn.addEventListener("click", async () => {
+        if (!await requireAdmin()) return;
         openAddModal();
     });
 
@@ -328,17 +547,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 11. EDIT MATERI
+    // 15. EDIT MATERI
     // ==========================================
     function openEditModal(id) {
-        const material = materials.find(item => item.id === id);
+        const material = materials.find(
+            item => String(item.id) === String(id)
+        );
 
         if (!material) {
             alert("Materi tidak ditemukan.");
             return;
         }
 
-        editingId = id;
+        editingId = material.id;
 
         titleInput.value = material.title;
         categoryInput.value = material.category;
@@ -354,10 +575,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 12. SIMPAN MATERI BARU ATAU PERUBAHAN
+    // 16. SIMPAN MATERI KE SUPABASE
     // ==========================================
-    materialForm.addEventListener("submit", event => {
+    materialForm.addEventListener("submit", async event => {
         event.preventDefault();
+
+        if (!await requireAdmin()) return;
 
         const title = titleInput.value.trim();
         const category = categoryInput.value;
@@ -369,57 +592,52 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        saveMaterialBtn.disabled = true;
+        saveMaterialBtn.textContent = "Menyimpan...";
+
+        const materialData = {
+            title,
+            category,
+            description,
+            content,
+            updated_at: new Date().toISOString()
+        };
+
+        let result;
+
         if (editingId !== null) {
-            const index = materials.findIndex(item => item.id === editingId);
-
-            if (index === -1) {
-                alert("Materi yang ingin diedit tidak ditemukan.");
-                return;
-            }
-
-            const previousMaterial = materials[index];
-
-            materials[index] = {
-                ...previousMaterial,
-                title,
-                category,
-                description,
-                content
-            };
+            result = await db
+                .from("materials")
+                .update(materialData)
+                .eq("id", Number(editingId));
         } else {
-            materials.unshift({
-                id: createMaterialId(),
-                title,
-                category,
-                description,
-                content
-            });
+            result = await db
+                .from("materials")
+                .insert([materialData]);
         }
 
-        if (!saveMaterials()) {
-            materials = loadMaterials();
-            renderMaterials();
+        saveMaterialBtn.disabled = false;
+        saveMaterialBtn.textContent =
+            editingId !== null ? "Simpan Perubahan" : "Simpan Materi";
+
+        if (result.error) {
+            console.error("Gagal menyimpan materi:", result.error);
+            alert("Materi gagal disimpan. Periksa login dan izin database.");
             return;
         }
 
-        renderMaterials();
+        await loadMaterialsFromDatabase();
         closeFormModal();
+        alert("Materi berhasil disimpan!");
     });
 
-    function createMaterialId() {
-        if (window.crypto && typeof window.crypto.randomUUID === "function") {
-            return window.crypto.randomUUID();
-        }
-
-        return "material-" + Date.now() + "-" +
-            Math.random().toString(36).slice(2, 9);
-    }
-
     // ==========================================
-    // 13. HAPUS MATERI
+    // 17. HAPUS MATERI DARI SUPABASE
     // ==========================================
-    function deleteMaterial(id) {
-        const material = materials.find(item => item.id === id);
+    async function deleteMaterial(id) {
+        const material = materials.find(
+            item => String(item.id) === String(id)
+        );
 
         if (!material) {
             alert("Materi tidak ditemukan.");
@@ -433,23 +651,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!confirmed) return;
 
-        const previousMaterials = [...materials];
-        materials = materials.filter(item => item.id !== id);
+        const { error } = await db
+            .from("materials")
+            .delete()
+            .eq("id", Number(id));
 
-        if (!saveMaterials()) {
-            materials = previousMaterials;
-            renderMaterials();
+        if (error) {
+            console.error("Gagal menghapus materi:", error);
+            alert("Materi gagal dihapus. Periksa izin database.");
             return;
         }
 
-        renderMaterials();
+        await loadMaterialsFromDatabase();
+        alert("Materi berhasil dihapus.");
     }
 
     // ==========================================
-    // 14. BACA MATERI
+    // 18. BACA MATERI
     // ==========================================
     function openReadModal(id) {
-        const material = materials.find(item => item.id === id);
+        const material = materials.find(
+            item => String(item.id) === String(id)
+        );
 
         if (!material) {
             alert("Materi tidak ditemukan.");
@@ -465,22 +688,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 15. TUTUP MODAL
+    // 19. TUTUP MODAL
     // ==========================================
     function closeFormModal() {
         formModal.classList.add("hidden");
         materialForm.reset();
         editingId = null;
-        document.body.style.overflow = readModal.classList.contains("hidden")
-            ? ""
-            : "hidden";
+
+        document.body.style.overflow =
+            readModal.classList.contains("hidden") ? "" : "hidden";
     }
 
     function closeReadModal() {
         readModal.classList.add("hidden");
-        document.body.style.overflow = formModal.classList.contains("hidden")
-            ? ""
-            : "hidden";
+
+        document.body.style.overflow =
+            formModal.classList.contains("hidden") ? "" : "hidden";
     }
 
     document.querySelectorAll("[data-close-form]").forEach(button => {
@@ -502,7 +725,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // ==========================================
-    // 16. TOMBOL KEMBALI KE ATAS
+    // 20. TOMBOL KEMBALI KE ATAS
     // ==========================================
     const backToTop = document.querySelector(".back-to-top");
 
@@ -513,6 +736,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Tampilkan semua materi saat website dibuka.
-    renderMaterials();
+    // ==========================================
+    // 21. MEMUAT MATERI SAAT WEBSITE DIBUKA
+    // ==========================================
+    const { data: sessionData } = await db.auth.getSession();
+    currentSession = sessionData.session;
+
+    await loadMaterialsFromDatabase();
+
+    // Jika admin sudah login dan database masih kosong,
+    // pindahkan materi lama/default ke database.
+    if (currentSession) {
+        const seeded = await seedMaterialsIfEmpty();
+
+        if (seeded) {
+            await loadMaterialsFromDatabase();
+        }
+    }
 });
